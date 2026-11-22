@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Anubhuv Kumar · Senior Software Engineer · FinTech Backend & Payments</title>
+  <meta name="description" content="Anubhuv Kumar — Senior Software Engineer (5+ yrs) building wallet microservices, ACID ledgers, Kafka event-driven payments, reconciliation engines and Razorpay integrations." />
+  <meta name="theme-color" content="#05070d" />
+  <meta property="og:title" content="Anubhuv Kumar · FinTech Backend Engineer" />
+  <meta property="og:description" content="Wallets, ledgers, payments & reconciliation at scale — Java, Spring Boot, Kafka." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₹</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Sora:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/core.css" />
+  <style>
+    :root {
+      --bg: #05070d; --text: #eef2f7; --muted: #93a1b5;
+      --accent: #f6c453; --accent2: #10e0a0; --accent3: #38bdf8; --on-accent: #1b1300;
+      --card: rgba(255, 255, 255, .045); --border: rgba(255, 255, 255, .1); --ok: #10e0a0;
+      --font-head: 'Sora', sans-serif; --font-body: 'Inter', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+    }
+    /* 3D credit card */
+    .card3d { width: min(420px, 88vw); aspect-ratio: 1.586; border-radius: 24px; padding: 28px; color: #fff;
+      background: linear-gradient(135deg, #1b2236 0%, #0c1220 45%, #13281f 100%);
+      border: 1px solid rgba(246,196,83,.35);
+      box-shadow: 0 40px 80px -20px rgba(0,0,0,.8), 0 0 60px -10px rgba(246,196,83,.35), inset 0 1px 0 rgba(255,255,255,.15);
+      display: flex; flex-direction: column; justify-content: space-between; overflow: visible; }
+    .card3d::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      background: radial-gradient(circle at 85% 15%, rgba(246,196,83,.35), transparent 40%), radial-gradient(circle at 10% 100%, rgba(16,224,160,.3), transparent 45%); }
+    .card-top { display: flex; justify-content: space-between; align-items: center; }
+    .chipset { width: 54px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #f8dc8b, #b8862b); position: relative; }
+    .chipset::after { content: ""; position: absolute; inset: 8px 12px; border: 1.5px solid rgba(80,50,0,.45); border-radius: 4px; }
+    .card-brand { font-family: var(--font-head); font-weight: 800; letter-spacing: .08em; font-size: .95rem; color: var(--accent); }
+    .card-num { font-family: var(--font-mono); font-size: clamp(1rem, 3.6vw, 1.35rem); letter-spacing: .14em; text-shadow: 0 2px 8px rgba(0,0,0,.6); }
+    .card-bottom { display: flex; justify-content: space-between; align-items: flex-end; font-family: var(--font-mono); font-size: .7rem; color: #c4cede; letter-spacing: .1em; }
+    .card-bottom strong { display: block; color: #fff; font-size: .95rem; letter-spacing: .06em; font-family: var(--font-head); }
+    .nfc { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(255,255,255,.5); border-left-color: transparent; border-bottom-color: transparent; transform: rotate(45deg); }
+    .pill { position: absolute; padding: 10px 14px; border-radius: 14px; font-size: .78rem; font-weight: 600; white-space: nowrap;
+      background: rgba(8,12,22,.75); border: 1px solid var(--border); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; align-items: center; gap: 8px; }
+    .pill b { color: var(--accent2); font-family: var(--font-head); font-size: 1rem; }
+    .pill.p1 { top: -26px; right: -18px; } .pill.p2 { bottom: -26px; left: -22px; } .pill.p3 { top: 42%; right: -44px; }
+    .ticker { display: flex; gap: 10px; align-items: center; font-family: var(--font-mono); font-size: .75rem; color: var(--accent2); }
+    @media (max-width: 700px) { .pill.p3 { display: none; } .pill.p1 { right: -4px; } .pill.p2 { left: -4px; } }
+  </style>
+  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+  <div id="preloader"><div class="loader-wrap"><div class="loader-cube"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="loader-text">SETTLING LEDGER…</div></div></div>
+  <div id="progress"></div>
+  <div class="bg-fallback"></div>
+  <canvas id="bg3d" aria-hidden="true"></canvas>
+  <div class="grid-overlay"></div>
+
+  <header class="nav">
+    <a href="#home" class="logo"><span class="logo-mark">AK</span><span>Anubhuv<span class="grad">.fin</span></span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#fintech">FinTech</a>
+      <a href="#skills">Skills</a>
+      <a href="#profiles">Profiles</a>
+      <a href="#contact">Contact</a>
+      <a href="assets/Anubhuv_Kumar_SDE_2_Fintech_Resume.pdf" target="_blank" rel="noopener" class="btn btn-primary btn-sm nav-cta"><svg class="icon"><use href="#i-download"/></svg>Resume</a>
+    </nav>
+    <button class="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div>
+        <div class="badge"><span class="pulse"></span>Senior Software Engineer @ Omnissa · Open to FinTech roles</div>
+        <h1><span class="hi">// hello, I'm</span><span class="split grad">Anubhuv Kumar</span></h1>
+        <div class="typed-line" data-typed='["Wallet & Ledger Microservices","ACID, Idempotent Transactions","Kafka Event-Driven Payments","Automated Reconciliation Engines","Razorpay Payment Integrations"]'><span class="prefix">&gt; </span><span class="typed"></span><span class="caret"></span></div>
+        <p class="hero-sub">Backend engineer with <b>5+ years</b> building <b>money-safe distributed systems</b> in Java &amp; Spring Boot — wallets, ledgers, settlements and payment rails that hold <b>99.9% transactional integrity</b> at scale.</p>
+        <div class="btn-row">
+          <a href="assets/Anubhuv_Kumar_SDE_2_Fintech_Resume.pdf" download class="btn btn-primary" data-magnetic><svg class="icon"><use href="#i-download"/></svg>Download FinTech Resume</a>
+          <a href="#contact" class="btn btn-ghost" data-magnetic>Let's Talk <svg class="icon"><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="socials">
+          <a href="https://www.linkedin.com/in/anubhuv-kumar-43a9241b1/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="icon"><use href="#i-linkedin"/></svg></a>
+          <a href="https://github.com/anubhav2103" target="_blank" rel="noopener" aria-label="GitHub"><svg class="icon"><use href="#i-github"/></svg></a>
+          <a href="mailto:anubhuv007@gmail.com" aria-label="Email"><svg class="icon"><use href="#i-mail"/></svg></a>
+          <a href="tel:+918754576548" aria-label="Phone"><svg class="icon"><use href="#i-phone"/></svg></a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="float">
+          <div class="card3d tilt" data-tilt="18">
+            <div class="card-top z1"><div class="chipset"></div><div class="nfc"></div><div class="card-brand">LEDGER·X</div></div>
+            <div class="card-num z2">4526&nbsp;•••• 9990 2025</div>
+            <div class="card-bottom z1"><div>CARD HOLDER<strong>ANUBHUV KUMAR</strong></div><div>INTEGRITY<strong>99.9%</strong></div></div>
+            <div class="pill p1 z3">⚡ <b>85%</b> less manual recon</div>
+            <div class="pill p2 z3">📈 <b>80%</b> scalability via Kafka</div>
+            <div class="pill p3 z3">🛡️ <b>ACID</b> + idempotent</div>
+          </div>
+        </div>
+      </div>
+      <a href="#about" class="scroll-hint" aria-label="Scroll down"><span class="mouse"></span>SCROLL</a>
+    </section>
+
+    <div class="marquee" aria-hidden="true"><div class="marquee-track">
+      <span>Wallet Microservice</span><span>Double-entry Ledger</span><span>Razorpay</span><span>Kafka</span><span>ACID Transactions</span><span>Idempotency Keys</span><span>Reconciliation</span><span>JWT RBAC</span><span>PCI-compliant</span><span>Spring Boot 4</span>
+      <span>Wallet Microservice</span><span>Double-entry Ledger</span><span>Razorpay</span><span>Kafka</span><span>ACID Transactions</span><span>Idempotency Keys</span><span>Reconciliation</span><span>JWT RBAC</span><span>PCI-compliant</span><span>Spring Boot 4</span>
+    </div></div>
+
+    <!-- STATS -->
+    <section class="section" style="padding-bottom:40px">
+      <div class="stats">
+        <div class="stat glass tilt" data-tilt="10" data-reveal><div class="num grad" data-count="99.9" data-decimals="1" data-suffix="%">0%</div><div class="label">Transactional integrity on debit / credit flows</div></div>
+        <div class="stat glass tilt" data-tilt="10" data-reveal style="--d:.08s"><div class="num grad" data-count="85" data-suffix="%">0%</div><div class="label">Reduction in manual reconciliation</div></div>
+        <div class="stat glass tilt" data-tilt="10" data-reveal style="--d:.16s"><div class="num grad" data-count="90" data-suffix="%">0%</div><div class="label">Anomaly-detection accuracy</div></div>
+        <div class="stat glass tilt" data-tilt="10" data-reveal style="--d:.24s"><div class="num grad" data-count="75" data-suffix="%">0%</div><div class="label">Fewer settlement delays &amp; discrepancies</div></div>
+        <div class="stat glass tilt" data-tilt="10" data-reveal style="--d:.32s"><div class="num grad" data-count="5" data-suffix="+ yrs">0</div><div class="label">Building backend &amp; payment systems</div></div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section" id="about">
+      <div class="section-head" data-reveal>
+        <div class="eyebrow">01 // About</div>
+        <h2>Engineering systems where <span class="grad">every rupee reconciles.</span></h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text glass" data-reveal="left">
+          <p>👋 Hi, I'm <b>Anubhuv Kumar</b> — a Senior Software Engineer with <b>5+ years</b> of backend experience in <b>Java, Spring Boot, Hibernate and Microservices</b>.</p>
+          <p>At <b>Eshopbox</b> I architected the <b>Wallet microservice</b> that automates processing-fee deductions across inward/outward transactions, order lifecycle events and returns — with <b>idempotent, ACID-compliant</b> debit &amp; credit operations, a <b>Kafka-driven ledger</b> and an automated <b>reconciliation engine</b> on Google Cloud Scheduler &amp; Task Queue.</p>
+          <p>Today at <b>Omnissa (formerly VMware EUC)</b> I drive enterprise modernization (Spring Boot 4 / Spring Framework 7), DevSecOps with Wiz CLI and high-reliability test automation — the same rigor that financial systems demand.</p>
+        </div>
+        <div class="about-cards">
+          <div class="mini-card glass" data-reveal="right"><div class="ico">💳</div><h4>Wallets &amp; Payments</h4><p>Brand-level credits, debits, refunds; Razorpay, PCI-compliant flows.</p></div>
+          <div class="mini-card glass" data-reveal="right" style="--d:.1s"><div class="ico">📒</div><h4>Ledger &amp; Recon</h4><p>Event-sourced ledger updates and automated anomaly detection.</p></div>
+          <div class="mini-card glass" data-reveal="right" style="--d:.2s"><div class="ico">🛡️</div><h4>Security</h4><p>JWT RBAC, bearer validation, token refresh, Wiz secrets scanning.</p></div>
+          <div class="mini-card glass" data-reveal="right" style="--d:.3s"><div class="ico">☁️</div><h4>Resilience</h4><p>S3 versioning, Glacier, cross-region backups &amp; recovery.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="section" id="experience">
+      <div class="section-head" data-reveal>
+        <div class="eyebrow">02 // Experience</div>
+        <h2>Where I've <span class="grad">shipped impact.</span></h2>
+        <p>Hover a company name for a quick preview — click to visit.</p>
+      </div>
+      <div class="timeline"><div class="beam"></div>
+
+        <div class="tl-item" data-reveal>
+          <article class="tl-card glass">
+            <div class="tl-top">
+              <div>
+                <h3><a class="co-link" href="https://www.linkedin.com/company/omnissa/home/" target="_blank" rel="noopener"><span class="co-name">Omnissa</span><svg class="icon"><use href="#i-arrow"/></svg>
+                  <span class="co-pop"><strong><span class="co-logo">O</span>Omnissa</strong>Formerly VMware End-User Computing — the digital-workspace platform company.<span class="co-url">linkedin.com/company/omnissa ↗</span></span></a> <small style="color:var(--muted);font-weight:500">(formerly VMware EUC)</small></h3>
+                <div class="tl-role">Senior Software Engineer · MTS-3</div>
+              </div>
+              <div class="chips"><span class="chip now">● Dec 2025 – Present</span><span class="chip"><svg class="icon"><use href="#i-pin"/></svg>Bengaluru</span></div>
+            </div>
+            <ul class="bullets">
+              <li>Integrated <b>Wiz CLI</b> into CI pipelines for automated vulnerability scanning &amp; <b>secrets detection</b> across Docker/container images, targeting <b>100% security-scan coverage</b>.</li>
+              <li>Spearheading microservices modernization to <b>Spring Boot 4 &amp; Spring Framework 7</b>, resolving <b>Jackson 2 → 3</b> compatibility issues across Java services.</li>
+              <li>Optimized Ops nightly regression via parallel execution, scenario isolation &amp; Awaitility sync — targeting <b>61% faster runs (155 → 60 min)</b> and <b>83% faster failure diagnosis (30 → 5 min)</b>.</li>
+              <li>Driving <b>MongoDB migration</b> &amp; database upgrades, targeting a <b>90% reduction</b> in migration-related issues.</li>
+              <li>Reduced false polling timeouts from ~<b>10% to below 1%</b> and eliminated leaked cloud resources with automated setup/teardown.</li>
+            </ul>
+            <div class="chips tech-row"><span class="chip">Java</span><span class="chip">Spring Boot 4</span><span class="chip">Spring Security</span><span class="chip">Kafka</span><span class="chip">MongoDB</span><span class="chip">Redis</span><span class="chip">Wiz</span><span class="chip">Docker</span><span class="chip">Kubernetes</span><span class="chip">Helm</span><span class="chip">Jenkins</span><span class="chip">GitHub Actions</span></div>
+          </article>
+        </div>
+
+        <div class="tl-item" data-reveal>
+          <article class="tl-card glass">
+            <div class="tl-top">
+              <div>
+                <h3><a class="co-link" href="https://www.eshopbox.com/" target="_blank" rel="noopener"><span class="co-name">Eshopbox</span><svg class="icon"><use href="#i-arrow"/></svg>
+                  <span class="co-pop"><strong><span class="co-logo">E</span>Eshopbox</strong>Tech-enabled e-commerce fulfilment &amp; logistics platform powering D2C brands across India.<span class="co-url">eshopbox.com ↗</span></span></a></h3>
+                <div class="tl-role">Software Development Engineer II · Backend</div>
+              </div>
+              <div class="chips"><span class="chip">Aug 2023 – Nov 2025</span><span class="chip"><svg class="icon"><use href="#i-pin"/></svg>Gurugram</span></div>
+            </div>
+            <ul class="bullets">
+              <li>Architected a <b>Wallet microservice</b> for automated processing-fee deductions across inward/outward transactions, order lifecycle events &amp; returns — <b>85% less manual reconciliation</b>.</li>
+              <li>Engineered <b>idempotent, ACID-compliant</b> debit/credit transactions, eliminating duplicate entries and sustaining <b>99.9% transactional integrity</b>.</li>
+              <li>Designed a <b>Kafka event-driven architecture</b> for async fee computation, transaction posting &amp; ledger updates — <b>80% better processing scalability</b>.</li>
+              <li>Built an automated <b>reconciliation engine</b> on Google Cloud Scheduler &amp; Task Queue — <b>90% anomaly-detection accuracy</b>, <b>75% fewer</b> discrepancies &amp; settlement delays.</li>
+              <li>Integrated wallet with <b>Razorpay</b> for brand credits, debits and refunds, cutting manual finance effort by <b>70%</b>.</li>
+            </ul>
+            <div class="collapsible" id="eb-more"><div><ul class="bullets">
+              <li>Implemented <b>JWT-based RBAC</b> with bearer-token validation &amp; stateless auth; token expiry/refresh improved session security by <b>30%</b> and cut unauthorized access by <b>40%</b>.</li>
+              <li>Data backup &amp; recovery with <b>AWS S3, EBS</b>, lifecycle policies, Glacier, object versioning, replication and cross-region backups.</li>
+              <li>Developed inventory-ledger exports (Java, MongoDB) for <b>90% transparency</b> in financial reporting; automated the Inward Export Report.</li>
+              <li>Vmeasure API integration for dimensional-weight &amp; slab-based charge calculation — <b>35% better billing accuracy</b>; rate-slab validation lifted invoice accuracy <b>25%</b>.</li>
+              <li>Optimized order routing: <b>40% faster</b> processing, <b>15% lower</b> shipping cost; caching + async processing cut API latency <b>30%</b>.</li>
+            </ul></div></div>
+            <button class="more-toggle" aria-expanded="false" aria-controls="eb-more" data-label="+ show more impact">+ show more impact</button>
+            <div class="chips tech-row"><span class="chip">Java</span><span class="chip">Spring Boot</span><span class="chip">Hibernate</span><span class="chip">Kafka</span><span class="chip">RabbitMQ</span><span class="chip">MongoDB</span><span class="chip">MySQL</span><span class="chip">GCP</span><span class="chip">Memcached</span><span class="chip">AWS S3</span><span class="chip">Razorpay</span></div>
+          </article>
+        </div>
+
+        <div class="tl-item" data-reveal>
+          <article class="tl-card glass">
+            <div class="tl-top">
+              <div>
+                <h3><a class="co-link" href="https://www.csgi.com/" target="_blank" rel="noopener"><span class="co-name">CSG International</span><svg class="icon"><use href="#i-arrow"/></svg>
+                  <span class="co-pop"><strong><span class="co-logo">C</span>CSG International</strong>Global SaaS leader in revenue management, billing &amp; payments for telecom and enterprise.<span class="co-url">csgi.com ↗</span></span></a></h3>
+                <div class="tl-role">Software Development Engineer I · SDE Grad Intern</div>
+              </div>
+              <div class="chips"><span class="chip">Jan 2022 – Aug 2023</span><span class="chip"><svg class="icon"><use href="#i-pin"/></svg>Bengaluru</span></div>
+            </div>
+            <ul class="bullets">
+              <li>Engineered <b>billing, rating &amp; integration</b> modules for telecom clients on SingleView — <b>25% better billing accuracy</b>, <b>45% higher</b> system reliability.</li>
+              <li>Integrated <b>Razorpay Payment APIs</b> with secure, <b>PCI-compliant</b>, fault-tolerant processing — <b>60% higher</b> transaction success rate.</li>
+              <li>Applied <b>Circuit Breaker &amp; Retry</b> patterns for third-party APIs — <b>60% more</b> fault tolerance.</li>
+              <li>Refactored legacy Java with <b>Streams &amp; Lambdas</b>, cutting execution time by <b>70%</b>; CI/CD with GitHub Actions &amp; Jenkins cut deployment time <b>70%</b>.</li>
+            </ul>
+            <div class="chips tech-row"><span class="chip">Java 8</span><span class="chip">Spring</span><span class="chip">SOAP / REST</span><span class="chip">Perl / EPM</span><span class="chip">Kafka</span><span class="chip">Docker</span><span class="chip">Jenkins</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINTECH FLOW -->
+    <section class="section" id="fintech">
+      <div class="section-head" data-reveal>
+        <div class="eyebrow">03 // Money Flow</div>
+        <h2>How a transaction <span class="grad">moves through my systems.</span></h2>
+        <p>An event-driven wallet pipeline I designed — every hop is idempotent, auditable and reconciled.</p>
+      </div>
+      <div class="flow glass" style="--steps:6;padding:50px 20px 40px" data-reveal="zoom">
+        <span class="flow-packet"></span>
+        <div class="flow-node"><div class="orb">🧾</div><h4>Order Event</h4><p>Inward / outward, lifecycle &amp; return events emitted</p></div>
+        <div class="flow-node"><div class="orb">📡</div><h4>Kafka</h4><p>Async fee computation &amp; transaction posting</p></div>
+        <div class="flow-node"><div class="orb">👛</div><h4>Wallet Service</h4><p>Idempotent, ACID debit / credit with dedupe keys</p></div>
+        <div class="flow-node"><div class="orb">📒</div><h4>Ledger</h4><p>Immutable entries, real-time balance &amp; exports</p></div>
+        <div class="flow-node"><div class="orb">🔍</div><h4>Reconciliation</h4><p>Cloud Scheduler + Task Queue anomaly detection</p></div>
+        <div class="flow-node"><div class="orb">🏦</div><h4>Settlement</h4><p>Razorpay credits, debits &amp; refunds</p></div>
+      </div>
+
+      <div class="cap-grid" style="margin-top:28px">
+        <div class="flip" data-reveal><div class="flip-inner">
+          <div class="flip-face glass"><div class="ico">👛</div><h4>Wallet Microservice</h4><p>Automated processing-fee deductions for every inward, outward, order &amp; return event.</p><div class="flip-hint">HOVER / TAP ↻</div></div>
+          <div class="flip-face glass back"><h4>Impact</h4><p>Replaced spreadsheet reconciliation with an event-driven wallet.</p><div class="metric">−85% manual recon</div></div>
+        </div></div>
+        <div class="flip" data-reveal style="--d:.1s"><div class="flip-inner">
+          <div class="flip-face glass"><div class="ico">🔐</div><h4>ACID + Idempotency</h4><p>Exactly-once semantics on debit/credit with idempotency keys &amp; transactional boundaries.</p><div class="flip-hint">HOVER / TAP ↻</div></div>
+          <div class="flip-face glass back"><h4>Impact</h4><p>Zero duplicate entries across retries and replays.</p><div class="metric">99.9% integrity</div></div>
+        </div></div>
+        <div class="flip" data-reveal style="--d:.2s"><div class="flip-inner">
+          <div class="flip-face glass"><div class="ico">🔍</div><h4>Reconciliation Engine</h4><p>Scheduled matching of ledger vs. source-of-truth with anomaly flags.</p><div class="flip-hint">HOVER / TAP ↻</div></div>
+          <div class="flip-face glass back"><h4>Impact</h4><p>Discrepancies and settlement delays cut by 75%.</p><div class="metric">90% accuracy</div></div>
+        </div></div>
+        <div class="flip" data-reveal style="--d:.3s"><div class="flip-inner">
+          <div class="flip-face glass"><div class="ico">💳</div><h4>Payment Gateways</h4><p>Razorpay integrations — PCI-compliant, fault-tolerant, with retries &amp; circuit breakers.</p><div class="flip-hint">HOVER / TAP ↻</div></div>
+          <div class="flip-face glass back"><h4>Impact</h4><p>More successful payments, less finance ops toil.</p><div class="metric">+60% success</div></div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="section" id="skills">
+      <div class="section-head" data-reveal>
+        <div class="eyebrow">04 // Stack</div>
+        <h2>Tools I use to <span class="grad">move money safely.</span></h2>
+        <p>Drag or hover the sphere to spin it.</p>
+      </div>
+      <div class="skills-grid">
+        <div class="sphere" data-reveal="zoom" data-tags="Java,Spring Boot,Hibernate,Microservices,Kafka,RabbitMQ,SQS,Redis,MongoDB,MySQL,Cassandra,DynamoDB,Elasticsearch,AWS,GCP,Azure,Docker,Kubernetes,Helm,Jenkins,GitHub Actions,Wiz CLI,JWT,RBAC,Razorpay,REST,SOAP,JUnit,Mockito,Awaitility,Memcached,ACID,Idempotency,S3 Glacier"></div>
+        <div class="skill-groups">
+          <div class="skill-group glass" data-reveal="right"><h4>Languages &amp; Frameworks</h4><div class="chips"><span class="chip">Java</span><span class="chip">Perl</span><span class="chip">Spring Boot</span><span class="chip">Spring MVC</span><span class="chip">Spring Security</span><span class="chip">Hibernate</span><span class="chip">REST / SOAP</span><span class="chip">Python · Go · JS</span></div></div>
+          <div class="skill-group glass" data-reveal="right" style="--d:.08s"><h4>Messaging &amp; Event Streaming</h4><div class="chips"><span class="chip">Kafka</span><span class="chip">RabbitMQ</span><span class="chip">AWS SQS</span><span class="chip">GCP Task Queue</span><span class="chip">GCP Memcached</span></div></div>
+          <div class="skill-group glass" data-reveal="right" style="--d:.16s"><h4>Data &amp; Caching</h4><div class="chips"><span class="chip">SQL / MySQL</span><span class="chip">MongoDB</span><span class="chip">Cassandra</span><span class="chip">Redis</span><span class="chip">DynamoDB</span><span class="chip">Elasticsearch</span></div></div>
+          <div class="skill-group glass" data-reveal="right" style="--d:.24s"><h4>Cloud, DevSecOps &amp; Testing</h4><div class="chips"><span class="chip">AWS</span><span class="chip">GCP</span><span class="chip">Azure</span><span class="chip">Docker</span><span class="chip">Kubernetes</span><span class="chip">Helm</span><span class="chip">Jenkins</span><span class="chip">GitHub Actions</span><span class="chip">Wiz CLI</span><span class="chip">JUnit</span><span class="chip">Mockito</span><span class="chip">Cucumber</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILES -->
+    <section class="section" id="profiles">
+      <div class="section-head" data-reveal>
+        <div class="eyebrow">05 // Problem Solving</div>
+        <h2>Sharpened on <span class="grad">850+ problems.</span></h2>
+      </div>
+      <div class="code-grid">
+        <div class="code-card glass tilt" data-tilt="12" data-reveal><div class="ring"><svg viewBox="0 0 110 110"><circle class="track" cx="55" cy="55" r="48"/><circle class="val" data-p=".9" cx="55" cy="55" r="48"/></svg><div class="ring-ico">🧩</div></div><div class="big grad" data-count="450" data-suffix="+">0</div><div class="plat">LeetCode</div><div class="sub">problems solved</div></div>
+        <div class="code-card glass tilt" data-tilt="12" data-reveal style="--d:.08s"><div class="ring"><svg viewBox="0 0 110 110"><circle class="track" cx="55" cy="55" r="48"/><circle class="val" data-p=".8" cx="55" cy="55" r="48"/></svg><div class="ring-ico">🌿</div></div><div class="big grad" data-count="400" data-suffix="+">0</div><div class="plat">GeeksforGeeks</div><div class="sub">problems solved</div></div>
+        <div class="code-card glass tilt" data-tilt="12" data-reveal style="--d:.16s"><div class="ring"><svg viewBox="0 0 110 110"><circle class="track" cx="55" cy="55" r="48"/><circle class="val" data-p="1" cx="55" cy="55" r="48"/></svg><div class="ring-ico">👨‍🍳</div></div><div class="big grad">5★</div><div class="plat">CodeChef</div><div class="sub">rating</div></div>
+        <div class="code-card glass tilt" data-tilt="12" data-reveal style="--d:.24s"><div class="ring"><svg viewBox="0 0 110 110"><circle class="track" cx="55" cy="55" r="48"/><circle class="val" data-p="1" cx="55" cy="55" r="48"/></svg><div class="ring-ico">🏅</div></div><div class="big grad">5★</div><div class="plat">HackerRank</div><div class="sub">gold badges</div></div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="section" id="education">
+      <div class="section-head" data-reveal>
+        <div class="eyebrow">06 // Education &amp; Journey</div>
+        <h2>Foundations &amp; <span class="grad">early wins.</span></h2>
+      </div>
+      <div class="edu-grid">
+        <div class="edu-card glass tilt" data-tilt="8" data-reveal="left">
+          <div class="cgpa"><span>9.1<small>CGPA</small></span></div>
+          <h3>Vel Tech University</h3>
+          <div class="deg">B.Tech, Computer Science Engineering · 2018 – 2022 · Chennai</div>
+          <ul class="bullets">
+            <li>Organised a <b>coding competition</b> during the Codigo Hackathon (CSE Dept.).</li>
+            <li><b>2nd prize</b> with the football team at the university Science Fest.</li>
+            <li>Participated in multiple workshops, webinars &amp; hackathons.</li>
+          </ul>
+        </div>
+        <div class="edu-card glass tilt" data-tilt="8" data-reveal="right">
+          <h3>Payments since day one 💸</h3>
+          <div class="deg">Payment-gateway work started before graduation.</div>
+          <ul class="bullets">
+            <li><b>The Sparks Foundation</b> — Payment-gateway integration for the Sparks website.</li>
+            <li><b>National Engineering Olympiad</b> — Website with Razorpay payments &amp; real-time DB updates (React, Node.js, Java, SQL).</li>
+            <li><b>Crio.Do</b> — Top 100 of 20,000+ in the web-dev externship.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="journey">
+        <div class="j-card glass" data-reveal><div class="when">Oct 2021 – Jan 2022</div><h4>Trainee Software Engineer</h4><div class="org">TekIP Knowledge Consulting · Noida</div></div>
+        <div class="j-card glass" data-reveal style="--d:.08s"><div class="when">Jan – Feb 2021</div><h4>Web Developer Intern</h4><div class="org">The Sparks Foundation</div><p>Payment Gateway Integration</p></div>
+        <div class="j-card glass" data-reveal style="--d:.16s"><div class="when">Oct – Nov 2020</div><h4>Web Developer Intern</h4><div class="org">National Engineering Olympiad</div><p>Razorpay + real-time payment sync</p></div>
+        <div class="j-card glass" data-reveal style="--d:.24s"><div class="when">Jun – Jul 2019</div><h4>Summer Intern</h4><div class="org">BSNL Ltd · Jamshedpur</div><p>TCP/IP networking</p></div>
+      </div>
+    </section>
+
+    <!-- OTHER PORTFOLIOS -->
+    <section class="section" style="padding-top:40px">
+      <div class="section-head" data-reveal><div class="eyebrow">// More views</div><h2 style="font-size:clamp(1.6rem,3.5vw,2.4rem)">Explore other <span class="grad">editions.</span></h2></div>
+      <div class="variants">
+        <a class="variant glass current" data-reveal><div class="ico">💳</div><h4>FinTech Edition</h4><p style="color:var(--muted);font-size:.9rem">You are here.</p><span>● current</span></a>
+        <a class="variant glass" href="../Ecommerce%20portfolio/index.html" data-reveal style="--d:.1s"><div class="ico">📦</div><h4>E-commerce Edition</h4><p style="color:var(--muted);font-size:.9rem">OMS, WMS, 3PL &amp; order routing.</p><span>open →</span></a>
+        <a class="variant glass" href="../Senior%20Software%20Engineer%20Portfolio/index.html" data-reveal style="--d:.2s"><div class="ico">🧠</div><h4>Senior Engineer Edition</h4><p style="color:var(--muted);font-size:.9rem">Architecture, DevSecOps &amp; modernization.</p><span>open →</span></a>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="section-head" data-reveal>
+        <div class="eyebrow">07 // Contact</div>
+        <h2>Building a payments or <span class="grad">ledger platform?</span></h2>
+        <p>Let's talk about how I can help your team ship reliable financial systems.</p>
+      </div>
+      <div class="contact-wrap">
+        <div class="contact-cards">
+          <a class="c-card glass" href="mailto:anubhuv007@gmail.com" data-copy="anubhuv007@gmail.com" data-reveal="left"><span class="c-ico"><svg class="icon"><use href="#i-mail"/></svg></span><span><small>Email</small><strong>anubhuv007@gmail.com</strong></span></a>
+          <a class="c-card glass" href="tel:+918754576548" data-copy="+91 8754576548" data-reveal="left" style="--d:.08s"><span class="c-ico"><svg class="icon"><use href="#i-phone"/></svg></span><span><small>Phone</small><strong>+91 87545 76548</strong></span></a>
+          <a class="c-card glass" href="https://www.linkedin.com/in/anubhuv-kumar-43a9241b1/" target="_blank" rel="noopener" data-reveal="left" style="--d:.16s"><span class="c-ico"><svg class="icon"><use href="#i-linkedin"/></svg></span><span><small>LinkedIn</small><strong>in/anubhuv-kumar</strong></span></a>
+          <a class="c-card glass" href="https://github.com/anubhav2103" target="_blank" rel="noopener" data-reveal="left" style="--d:.24s"><span class="c-ico"><svg class="icon"><use href="#i-github"/></svg></span><span><small>GitHub</small><strong>github.com/anubhav2103</strong></span></a>
+        </div>
+        <form class="contact-form glass" id="contactForm" data-reveal="right">
+          <div class="form-row">
+            <div class="field"><input id="f-name" name="name" placeholder=" " required /><label for="f-name">Your name</label></div>
+            <div class="field"><input id="f-email" name="email" type="email" placeholder=" " /><label for="f-email">Your email</label></div>
+          </div>
+          <div class="field"><input id="f-subject" name="subject" placeholder=" " /><label for="f-subject">Subject</label></div>
+          <div class="field"><textarea id="f-msg" name="message" placeholder=" " required></textarea><label for="f-msg">Message</label></div>
+          <button class="btn btn-primary" type="submit" data-magnetic style="justify-self:start"><svg class="icon"><use href="#i-send"/></svg>Send Message</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>© <span data-year></span> Anubhuv Kumar · FinTech Edition · Crafted with Three.js</div>
+    <div class="socials">
+      <a href="https://www.linkedin.com/in/anubhuv-kumar-43a9241b1/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="icon"><use href="#i-linkedin"/></svg></a>
+      <a href="https://github.com/anubhav2103" target="_blank" rel="noopener" aria-label="GitHub"><svg class="icon"><use href="#i-github"/></svg></a>
+      <a href="mailto:anubhuv007@gmail.com" aria-label="Email"><svg class="icon"><use href="#i-mail"/></svg></a>
+    </div>
+  </footer>
+  <button class="to-top" aria-label="Back to top"><svg class="icon"><use href="#i-up"/></svg></button>
+
+  <script src="assets/core.js"></script>
+  <script type="module" src="assets/scene.js"></script>
+</body>
+</html>
